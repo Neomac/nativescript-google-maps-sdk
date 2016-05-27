@@ -8,14 +8,5 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true
-    },
-    
-    "filesGlob": [
-        "./**/*.ts",
-        "!./node_modules/**/*.ts"
-    ],
-    
-    "exclude": [
-        "./platforms/**/*.ts"
-    ]
+    }
 }
