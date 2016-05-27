@@ -67,6 +67,20 @@ export class MapView extends MapViewCommon {
         return (update) ? cpBuilder.build() : null;
     }
 
+    animateCamera(lat, lng) {
+        var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newLatLng(new com.google.android.gms.maps.model.LatLng(lat, lng));
+        if (!cameraUpdate) return;
+
+        if (!this.gMap) {
+            this._pendingCameraUpdate = true
+            return;
+        }
+
+        this._pendingCameraUpdate = false;
+
+        this.gMap.moveCamera(cameraUpdate);
+    }
+
     updateCamera() {
         var cameraPosition = this._createCameraPosition();
         if (!cameraPosition) return;
