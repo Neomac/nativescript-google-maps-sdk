@@ -8,4 +8,5 @@ android {
 
 dependencies {
 	compile 'com.google.android.gms:play-services-maps:+'
+	compile 'com.google.maps.android:android-maps-utils:0.4+'
 }

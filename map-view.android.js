@@ -73,6 +73,20 @@ var MapView = (function (_super) {
         var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cameraPosition);
         this.gMap.moveCamera(cameraUpdate);
     };
+    MapView.prototype.smoothUpdateCamera = function (latitude, longitude, zoom, tilt, bearing, duration) {
+        var cpBuilder = new com.google.android.gms.maps.model.CameraPosition.Builder();
+        var cp = null;
+        cpBuilder.target(new com.google.android.gms.maps.model.LatLng(latitude, longitude));
+        cpBuilder.bearing(bearing);
+        cpBuilder.zoom(zoom);
+        cpBuilder.tilt(tilt);
+        cp = cpBuilder.build();
+        var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cp);
+        this.gMap.animateCamera(cameraUpdate);
+    };
+    MapView.prototype.computeHeading = function (latitude1, longitude1, latitude2, longitude2) {
+        return com.google.maps.android.SphericalUtil.computeHeading(new com.google.android.gms.maps.model.LatLng(latitude1, longitude1), new com.google.android.gms.maps.model.LatLng(latitude2, longitude2));
+    };
     MapView.prototype.updatePadding = function () {
         if (this.padding && this.gMap) {
             this.gMap.setPadding(this.padding[0] || 0, this.padding[1] || 0, this.padding[2] || 0, this.padding[3] || 0);
