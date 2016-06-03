@@ -122,6 +122,10 @@ export class MapView extends MapViewCommon {
         }
     }
 
+    computeDistanceBetween(latitude1:number, longitude1:number, latitude2:number, longitude2:number) {
+        return com.google.maps.android.SphericalUtil.computeDistanceBetween(new com.google.android.gms.maps.model.LatLng(latitude1, longitude1), new com.google.android.gms.maps.model.LatLng(latitude2, longitude2));
+    }
+
     get android() {
         return this._android;
     }

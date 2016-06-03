@@ -92,6 +92,9 @@ var MapView = (function (_super) {
             this.gMap.setPadding(this.padding[0] || 0, this.padding[1] || 0, this.padding[2] || 0, this.padding[3] || 0);
         }
     };
+    MapView.prototype.computeDistanceBetween = function (latitude1, longitude1, latitude2, longitude2) {
+        return com.google.maps.android.SphericalUtil.computeDistanceBetween(new com.google.android.gms.maps.model.LatLng(latitude1, longitude1), new com.google.android.gms.maps.model.LatLng(latitude2, longitude2));
+    };
     Object.defineProperty(MapView.prototype, "android", {
         get: function () {
             return this._android;
