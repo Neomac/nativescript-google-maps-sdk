@@ -84,6 +84,11 @@ var MapView = (function (_super) {
         var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cp);
         this.gMap.animateCamera(cameraUpdate);
     };
+    MapView.prototype.updateCameraBounds = function (minLat, minLng, maxLat, maxLng) {
+        var latLngBounds = new com.google.android.gms.maps.model.LatLngBounds(new com.google.android.gms.maps.model.LatLng(minLat, minLng), new com.google.android.gms.maps.model.LatLng(maxLat, maxLng));
+        var cameraUpdate = new com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(latLngBounds, 0);
+        this.gMap.animateCamera(cameraUpdate);
+    };
     MapView.prototype.computeHeading = function (latitude1, longitude1, latitude2, longitude2) {
         return com.google.maps.android.SphericalUtil.computeHeading(new com.google.android.gms.maps.model.LatLng(latitude1, longitude1), new com.google.android.gms.maps.model.LatLng(latitude2, longitude2));
     };
