@@ -112,6 +112,14 @@ export class MapView extends MapViewCommon {
 
     }
 
+    updateCameraBounds(minLat:number, minLng:number, maxLat:number, maxLng:number) {
+        var latLngBounds = new com.google.android.gms.maps.model.LatLngBounds( new com.google.android.gms.maps.model.LatLng(minLat, minLng), new com.google.android.gms.maps.model.LatLng(maxLat, maxLng));
+
+        var cameraUpdate = new com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(latLngBounds, 0);
+        this.gMap.animateCamera(cameraUpdate);
+
+    }
+
     computeHeading(latitude1:number, longitude1:number, latitude2:number, longitude2:number) {
         return com.google.maps.android.SphericalUtil.computeHeading(new com.google.android.gms.maps.model.LatLng(latitude1, longitude1), new com.google.android.gms.maps.model.LatLng(latitude2, longitude2));
     }
