@@ -58,11 +58,43 @@ class MapViewDelegateImpl extends NSObject implements GMSMapViewDelegate {
         }
     }
 
+    public mapViewDidTapAtCoordinate(mapView: GMSMapView, coordinate: CLLocationCoordinate2D): void {
+        let owner = this._owner.get();
+        if (owner) {
+            let position: Position = Position.positionFromLatLng(coordinate.latitude, coordinate.longitude);
+            owner.notifyPositionEvent(MapViewCommon.coordinateTappedEvent, position);
+        }
+    }
+
     public mapViewDidTapMarker(mapView: GMSMapView, gmsMarker: GMSMarker): void {
         let owner = this._owner.get();
         if (owner) {
             let marker: Marker = owner.findMarker((marker: Marker) => marker.ios == gmsMarker);
             owner.notifyMarkerTapped(marker);
+        }
+    }
+
+    public mapViewDidBeginDraggingMarker(mapView: GMSMapView, gmsMarker: GMSMarker): void {
+        let owner = this._owner.get();
+        if (owner) {
+            let marker: Marker = owner.findMarker((marker: Marker) => marker.ios == gmsMarker);
+            owner.notifyMarkerBeginDragging(marker);
+        }
+    }
+
+    public mapViewDidEndDraggingMarker(mapView: GMSMapView, gmsMarker: GMSMarker): void {
+        let owner = this._owner.get();
+        if (owner) {
+            let marker: Marker = owner.findMarker((marker: Marker) => marker.ios == gmsMarker);
+            owner.notifyMarkerEndDragging(marker);
+        }
+    }
+
+    public mapViewDidDragMarker(mapView: GMSMapView, gmsMarker: GMSMarker): void {
+        let owner = this._owner.get();
+        if (owner) {
+            let marker: Marker = owner.findMarker((marker: Marker) => marker.ios == gmsMarker);
+            owner.notifyMarkerDrag(marker);
         }
     }
 }
@@ -84,8 +116,8 @@ export class MapView extends MapViewCommon {
 
     onLoaded() {
         super.onLoaded();
-        this.notifyMapReady();
         this._ios.delegate = this._delegate = MapViewDelegateImpl.initWithOwner(new WeakRef(this));
+        this.notifyMapReady();
     }
 
     private _createCameraPosition() {
@@ -139,10 +171,6 @@ export class MapView extends MapViewCommon {
 
     findMarker(callback: (marker: Marker) => boolean): Marker {
         return this._markers.find(callback);
-    }
-
-    notifyMarkerTapped(marker: Marker) {
-        this.notifyMarkerEvent(MapViewCommon.markerSelectEvent, marker);
     }
 
     addPolyline(shape: Polyline) {
@@ -199,16 +227,16 @@ export class Position extends PositionBase {
     }
 
     get longitude() {
-        return this._ios.latitude;
+        return this._ios.longitude;
     }
 
     set longitude(longitude) {
         this._ios = CLLocationCoordinate2DMake(this.latitude, longitude);
     }
 
-    constructor() {
+    constructor(ios?:CLLocationCoordinate2D) {
         super();
-        this._ios = CLLocationCoordinate2DMake(0, 0);
+        this._ios = ios || CLLocationCoordinate2DMake(0, 0);
     }
 
     public static positionFromLatLng(latitude: number, longitude: number): Position {
@@ -221,7 +249,6 @@ export class Position extends PositionBase {
 
 export class Marker extends MarkerBase {
     private _ios: any;
-    private _position: Position;
     private _icon: Image;
 
     constructor() {
@@ -230,11 +257,10 @@ export class Marker extends MarkerBase {
     }
 
     get position() {
-        return this._position;
+        return new Position(this._ios.position);
     }
 
     set position(position: Position) {
-        this._position = position;
         this._ios.position = position.ios;
     }
 

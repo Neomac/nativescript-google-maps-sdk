@@ -69,7 +69,8 @@ Modify your view by adding the namespace `xmlns:maps="nativescript-google-maps-s
     <maps:mapView latitude="{{ latitude }}" longitude="{{ longitude }}" 
     								zoom="{{ zoom }}" bearing="{{ bearing }}" 
     								tilt="{{ tilt }}" padding="{{ padding }}" mapReady="onMapReady"  
-   								markerSelect="onMarkerSelect" 
+   								markerSelect="onMarkerSelect" markerBeginDragging="onMarkerBeginDragging"
+   								markerEndDragging="onMarkerEndDragging" markerDrag="onMarkerDrag"
    								cameraChanged="onCameraChanged" />
   </GridLayout>
 </Page>
@@ -82,7 +83,11 @@ The following events are available:
 Event          | Description
 -------------- |:---------------------------------
 `mapReady`     | Called when Google Map is ready for use
+`coordinateTapped` | Fires when coordinate is clicked on map
 `markerSelect` | Fires whenever a marker is selected
+`markerBeginDragging` | Fires when a marker begins dragging
+`markerDrag` | Fires repeatedly while a marker is being dragged
+`markerEndDragging` | Fires when a marker ends dragging
 `cameraChanged`| Fired on each camera change
 
 
@@ -116,4 +121,34 @@ function onCameraChanged(args) {
 exports.onMapReady = onMapReady;
 exports.onMarkerSelect = onMarkerSelect;
 exports.onCameraChanged = onCameraChanged;
+```
+
+## Using with Angular
+
+```
+// /app/map-example.component.ts
+
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {registerElement} from "nativescript-angular/element-registry";
+
+// Important - must register MapView plugin in order to use in Angular templates
+registerElement("MapView", () => require("nativescript-google-maps-sdk").MapView);
+
+@Component({
+    selector: 'map-example-component',
+    template: `
+    <GridLayout>
+        <MapView (mapReady)="onMapReady($event)"></MapView>
+    </GridLayout>
+    `
+})
+export class MapExampleComponent {
+
+    @ViewChild("MapView") mapView: ElementRef;
+
+    //Map events
+    onMapReady = (event) => {
+        console.log("Map Ready");
+    };
+}
 ```

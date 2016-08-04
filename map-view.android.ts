@@ -167,10 +167,6 @@ export class MapView extends MapViewCommon {
         return this._markers.find(callback);
     }
 
-    notifyMarkerTapped(marker: Marker) {
-        this.notifyMarkerEvent(MapViewCommon.markerSelectEvent, marker);
-    }
-
     addPolyline(shape: Polyline) {
         shape.loadPoints();
         shape.android = this.gMap.addPolyline(shape.android);
@@ -251,6 +247,14 @@ export class MapView extends MapViewCommon {
                     owner.updateCamera();
                 }
 
+                gMap.setOnMapClickListener(new com.google.android.gms.maps.GoogleMap.OnMapClickListener({
+                    onMapClick: function(gmsPoint) {
+
+                        let position: Position = new Position(gmsPoint);
+                        owner.notifyPositionEvent(MapViewCommon.coordinateTappedEvent, position);
+                    }
+                }));
+
                 gMap.setOnMarkerClickListener(new com.google.android.gms.maps.GoogleMap.OnMarkerClickListener({
                     onMarkerClick: function(gmsMarker) {
 
@@ -258,6 +262,21 @@ export class MapView extends MapViewCommon {
                         owner.notifyMarkerTapped(marker);
 
                         return false;
+                    }
+                }));
+
+                gMap.setOnMarkerDragListener(new com.google.android.gms.maps.GoogleMap.OnMarkerDragListener({
+                    onMarkerDrag: function(gmsMarker) {
+                        let marker: Marker = owner.findMarker((marker: Marker) => marker.android.getId() === gmsMarker.getId());
+                        owner.notifyMarkerDrag(marker);
+                    },
+                    onMarkerDragEnd: function(gmsMarker) {
+                        let marker: Marker = owner.findMarker((marker: Marker) => marker.android.getId() === gmsMarker.getId());
+                        owner.notifyMarkerEndDragging(marker);
+                    },
+                    onMarkerDragStart: function(gmsMarker) {
+                        let marker: Marker = owner.findMarker((marker: Marker) => marker.android.getId() === gmsMarker.getId());
+                        owner.notifyMarkerBeginDragging(marker);
                     }
                 }));
 
@@ -325,20 +344,20 @@ export class Position extends PositionBase {
     }
 
     set latitude(latitude) {
-        this._android = new com.google.android.gms.maps.model.LatLng(latitude, this.longitude);
+        this._android = new com.google.android.gms.maps.model.LatLng(parseFloat(latitude), this.longitude);
     }
 
     get longitude() {
-        return this._android.latitude;
+        return this._android.longitude;
     }
 
     set longitude(longitude) {
-        this._android = new com.google.android.gms.maps.model.LatLng(this.latitude, longitude);
+        this._android = new com.google.android.gms.maps.model.LatLng(this.latitude, parseFloat(longitude));
     }
 
-    constructor() {
+    constructor(android?:com.google.android.gms.maps.model.LatLng) {
         super();
-        this._android = new com.google.android.gms.maps.model.LatLng(0, 0);
+        this._android = android || new com.google.android.gms.maps.model.LatLng(0, 0);
     }
 
     public static positionFromLatLng(latitude: number, longitude: number): Position {
@@ -351,7 +370,6 @@ export class Position extends PositionBase {
 
 export class Marker extends MarkerBase {
     private _android: any;
-    private _position: Position;
     private _icon: Image;
     private _isMarker: boolean = false;
 
@@ -364,11 +382,10 @@ export class Marker extends MarkerBase {
 
 
     get position() {
-        return this._position;
+        return new Position(this._android.getPosition());
     }
 
     set position(value: Position) {
-        this._position = value;
         if (this._isMarker) {
             this._android.setPosition(value.android);
         } else {
