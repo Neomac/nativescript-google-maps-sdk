@@ -1,6 +1,6 @@
-C'est de la merde
+NativeScript plugin for Google Maps SDK
 ================
-Ma grosse couille mon gars
+This is a cross-platform (iOS & Android) Nativescript plugin for the Google Maps API
 
 
 This is a cross-platform (iOS & Android) Nativescript plugin for the [Google Maps API](https://developers.google.com/maps/)
