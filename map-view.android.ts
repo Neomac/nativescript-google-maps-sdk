@@ -67,7 +67,7 @@ export class MapView extends MapViewCommon {
         return (update) ? cpBuilder.build() : null;
     }
 
-    animateCamera(lat, lng) {
+    animateCamera(lat:number, lng:number) {
         var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newLatLng(new com.google.android.gms.maps.model.LatLng(lat, lng));
         if (!cameraUpdate) return;
 
@@ -79,6 +79,25 @@ export class MapView extends MapViewCommon {
         this._pendingCameraUpdate = false;
 
         this.gMap.moveCamera(cameraUpdate);
+    }
+
+    fitToBounds(latLngBounds, padding:number) {
+        var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newLatLngBounds(
+            new com.google.android.gms.maps.model.LatLngBounds(
+                new com.google.android.gms.maps.model.LatLng(latLngBounds[0].lat, latLngBounds[0].lng),
+                new com.google.android.gms.maps.model.LatLng(latLngBounds[1].lat, latLngBounds[1].lng)),padding);
+
+        if (!cameraUpdate) return;
+
+        if (!this.gMap) {
+            this._pendingCameraUpdate = true
+            return;
+        }
+
+        this._pendingCameraUpdate = false;
+
+        this.gMap.moveCamera(cameraUpdate);
+
     }
 
     updateCamera() {
