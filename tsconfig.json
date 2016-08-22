@@ -8,18 +8,26 @@
         "noLib": false,
         "preserveConstEnums": true,
         "suppressImplicitAnyIndexErrors": true,
-        "sourceMap": true,
+        "sourceMap": false,
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
-        "noEmitHelpers": true,
-        "noEmitOnError": true
+        "noEmitHelpers": true
     },
 
     "filesGlob": [
         "./**/*.ts",
         "!./node_modules/**/*.ts"
     ],
+<<<<<<< HEAD
 
+=======
+    "files": [
+        "map-view.d.ts",
+        "map-view-common.ts",
+        "map-view.android.ts",
+        "map-view.ios.ts"
+    ],
+>>>>>>> dapriett/master
     "exclude": [
         "./platforms/**/*.ts"
     ]

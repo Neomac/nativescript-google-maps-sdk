@@ -66,6 +66,14 @@ class MapViewDelegateImpl extends NSObject implements GMSMapViewDelegate {
         }
     }
 
+    public mapViewDidLongPressAtCoordinate(mapView: GMSMapView, coordinate: CLLocationCoordinate2D): void {
+        let owner = this._owner.get();
+        if (owner) {
+            let position: Position = Position.positionFromLatLng(coordinate.latitude, coordinate.longitude);
+            owner.notifyPositionEvent(MapViewCommon.coordinateLongPressEvent, position);
+        }
+    }
+
     public mapViewDidTapMarker(mapView: GMSMapView, gmsMarker: GMSMarker): void {
         let owner = this._owner.get();
         if (owner) {
@@ -74,6 +82,15 @@ class MapViewDelegateImpl extends NSObject implements GMSMapViewDelegate {
         }
     }
 
+    public mapViewDidTapOverlay(mapView: GMSMapView, gmsOverlay: GMSOverlay): void {
+        let owner = this._owner.get();
+        if (owner) {
+            let shape: Shape = owner.findShape((shape: Shape) => shape.ios == gmsOverlay);
+            if (shape) {
+                owner.notifyShapeTapped(shape);
+            }
+        }
+    }
     public mapViewDidBeginDraggingMarker(mapView: GMSMapView, gmsMarker: GMSMarker): void {
         let owner = this._owner.get();
         if (owner) {
@@ -202,7 +219,7 @@ export class MapView extends MapViewCommon {
     }
 
     findShape(callback: (shape: Shape) => boolean): Shape {
-        return this._markers.find(callback);
+        return this._shapes.find(callback);
     }
 
     clear() {
@@ -350,6 +367,14 @@ export class Polyline extends PolylineBase {
         this._points = [];
     }
 
+    get clickable() {
+        return this._ios.tappable;
+    }
+
+    set clickable(value: boolean) {
+        this._ios.tappable = value;
+    }
+
     get zIndex() {
         return this._ios.zIndex;
     }
@@ -427,6 +452,14 @@ export class Circle extends CircleBase {
     constructor() {
         super();
         this._ios = GMSCircle.new();
+    }
+
+    get clickable() {
+        return this._ios.tappable;
+    }
+
+    set clickable(value: boolean) {
+        this._ios.tappable = value;
     }
 
     get zIndex() {

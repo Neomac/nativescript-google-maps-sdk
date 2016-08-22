@@ -255,12 +255,48 @@ export class MapView extends MapViewCommon {
                     }
                 }));
 
+                gMap.setOnMapLongClickListener(new com.google.android.gms.maps.GoogleMap.OnMapLongClickListener({
+                    onMapLongClick: function(gmsPoint) {
+                        let position: Position = new Position(gmsPoint);
+                        owner.notifyPositionEvent(MapViewCommon.coordinateLongPressEvent, position);
+                    }
+                }));
+
                 gMap.setOnMarkerClickListener(new com.google.android.gms.maps.GoogleMap.OnMarkerClickListener({
                     onMarkerClick: function(gmsMarker) {
-
                         let marker: Marker = owner.findMarker((marker: Marker) => marker.android.getId() === gmsMarker.getId());
                         owner.notifyMarkerTapped(marker);
 
+                        return false;
+                    }
+                }));
+
+                gMap.setOnCircleClickListener(new com.google.android.gms.maps.GoogleMap.OnCircleClickListener({
+                    onCircleClick: function(gmsCircle) {
+                        let shape: Shape = owner.findShape((shape: Shape) => shape.android.getId() === gmsCircle.getId());
+                        if (shape) {
+                            owner.notifyShapeTapped(shape);
+                        }
+                        return false;
+                    }
+                }));
+
+                gMap.setOnPolylineClickListener(new com.google.android.gms.maps.GoogleMap.OnPolylineClickListener({
+                    onPolylineClick: function(gmsPolyline) {
+                        let shape: Shape = owner.findShape((shape: Shape) => shape.android.getId() === gmsPolyline.getId());
+                        if (shape) {
+                            owner.notifyShapeTapped(shape);
+                        }
+                        return false;
+                    }
+                }));
+
+                gMap.setOnPolygonClickListener(new com.google.android.gms.maps.GoogleMap.OnPolygonClickListener({
+                    onPolygonClick: function(gmsPolygon) {
+                        let shape: Shape = owner.findShape((shape: Shape) => shape.android.getId() === gmsPolygon.getId());
+                        if (shape) {
+                            owner.notifyShapeTapped(shape);
+                        }
                         return false;
                     }
                 }));
@@ -533,6 +569,18 @@ export class Polyline extends PolylineBase {
         this._points = [];
     }
 
+    get clickable() {
+        return this._android.isClickable();
+    }
+
+    set clickable(value: boolean) {
+        if (this._isReal) {
+            this._android.setClickable(value);
+        } else {
+            this._android.clickable(value);
+        }
+    }
+
     get zIndex() {
         return this._android.getZIndex();
     }
@@ -656,6 +704,18 @@ export class Circle extends CircleBase {
     constructor() {
         super();
         this.android = new com.google.android.gms.maps.model.CircleOptions();
+    }
+
+    get clickable() {
+        return this._android.isClickable();
+    }
+
+    set clickable(value: boolean) {
+        if (this._isReal) {
+            this._android.setClickable(value);
+        } else {
+            this._android.clickable(value);
+        }
     }
 
     get zIndex() {
