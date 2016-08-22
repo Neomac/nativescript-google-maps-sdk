@@ -31,6 +31,7 @@ declare module "nativescript-google-maps-sdk" {
 
         public updateCamera(): void;
         
+        
         public smoothUpdateCamera(latitude:number, longitude:number, zoom:number, tilt:number, bearing:number, duration:number) : void;
 
         public computeHeading(latitude1:number, longitude1:number, latitude2:number, longitude2:number) : void;
