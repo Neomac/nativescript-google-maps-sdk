@@ -7,11 +7,7 @@ android {
 }
 
 dependencies {
-<<<<<<< HEAD
-	compile 'com.google.android.gms:play-services-maps:+'
-	compile 'com.google.maps.android:android-maps-utils:0.4+'
-=======
 	def googlePlayServicesVersion = project.hasProperty('googlePlayServicesVersion') ? project.googlePlayServicesVersion : '+'
 	compile "com.google.android.gms:play-services-maps:$googlePlayServicesVersion"
->>>>>>> dapriett/master
+	compile "com.google.maps.android:android-maps-utils:0.4+"
 }

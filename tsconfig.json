@@ -18,16 +18,12 @@
         "./**/*.ts",
         "!./node_modules/**/*.ts"
     ],
-<<<<<<< HEAD
-
-=======
     "files": [
         "map-view.d.ts",
         "map-view-common.ts",
         "map-view.android.ts",
         "map-view.ios.ts"
     ],
->>>>>>> dapriett/master
     "exclude": [
         "./platforms/**/*.ts"
     ]
