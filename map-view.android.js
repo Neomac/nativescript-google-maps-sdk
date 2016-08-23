@@ -84,7 +84,7 @@ var MapView = (function (_super) {
         var cameraUpdate = com.google.android.gms.maps.CameraUpdateFactory.newCameraPosition(cp);
         this.gMap.animateCamera(cameraUpdate);
     };
-    MapView.prototype.animateFromLatLng() = function (latitude, longitude) {
+    MapView.prototype.animateFromLatLng = function (latitude, longitude) {
         var cpBuilder = new com.google.android.gms.maps.model.CameraPosition.Builder();
         var cp = null;
         cpBuilder.target(new com.google.android.gms.maps.model.LatLng(latitude, longitude));
